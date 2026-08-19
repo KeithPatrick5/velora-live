@@ -5,3 +5,4 @@ data/state.json
 data/live-health.json
 .vercel
 .env.local
+.env*
