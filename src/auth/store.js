@@ -2,7 +2,13 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import crypto from "node:crypto";
 
-const file = path.resolve("data/state.json");
+// Vercel functions cannot write into the deployed source bundle. Keep local
+// development persistent and use the function's writable temp directory when
+// hosted. A real shared database can replace this store later without changing
+// the API contract.
+const file = process.env.VERCEL
+  ? path.join("/tmp", "velora-state.json")
+  : path.resolve("data/state.json");
 
 async function load() {
   try { return JSON.parse(await fs.readFile(file, "utf8")); }

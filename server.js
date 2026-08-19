@@ -46,7 +46,7 @@ function sse(res, event, data) {
   res.write(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`);
 }
 
-async function api(req, res, url) {
+export async function api(req, res, url) {
   if (url.pathname === "/api/live/upcoming" && req.method === "GET") {
     try { return json(res, 200, await getUpcomingSports({ force: url.searchParams.get('refresh') === '1' })); }
     catch (error) { return json(res, 200, { events: [], focus: { mode: "channels", label: "Live TV", sport: null, events: [] }, error: error.message }); }
@@ -204,7 +204,7 @@ async function staticFile(req, res, url) {
   }
 }
 
-const server = http.createServer(async (req,res) => {
+export async function requestHandler(req,res) {
   const url = new URL(req.url, `http://${req.headers.host || "localhost"}`);
   try {
     if (url.pathname.startsWith("/api/")) {
@@ -218,5 +218,11 @@ const server = http.createServer(async (req,res) => {
     if (!res.headersSent) return json(res,500,{error:"Internal server error"});
     res.end();
   }
-});
-server.listen(PORT, () => console.log(`Velora running at http://localhost:${PORT}`));
+}
+
+// Vercel imports requestHandler through api/index.js. Only open a TCP listener
+// when this file is run directly for local development.
+if (!process.env.VERCEL) {
+  const server = http.createServer(requestHandler);
+  server.listen(PORT, () => console.log(`Velora running at http://localhost:${PORT}`));
+}

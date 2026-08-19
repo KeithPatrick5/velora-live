@@ -5,7 +5,9 @@ import { fileURLToPath } from 'node:url';
 const ROOT = path.dirname(path.dirname(path.dirname(fileURLToPath(import.meta.url))));
 const DEFAULT_PLAYLIST = 'https://iptv-org.github.io/iptv/countries/us.m3u';
 const PLAYLIST_TTL_MS = 5 * 60 * 1000;
-const HEALTH_FILE = path.join(ROOT, 'data', 'live-health.json');
+const HEALTH_FILE = process.env.VERCEL
+  ? path.join('/tmp', 'velora-live-health.json')
+  : path.join(ROOT, 'data', 'live-health.json');
 const HEALTHY_TTL_MS = 6 * 60 * 60 * 1000;
 const FAILED_TTL_MS = 45 * 60 * 1000;
 const CHECK_TIMEOUT_MS = 4500;
@@ -784,4 +786,3 @@ export async function getUpcomingSports(options={}) {
   sportsCache = { at: Date.now(), snapshot };
   return snapshot;
 }
-

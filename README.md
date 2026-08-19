@@ -1,6 +1,6 @@
-# Velora / Dulo recovered source project
+# Velora / Dulo
 
-This project was reconstructed from the deployed Velora build captured from the authenticated ChatGPT Site. The recovered frontend assets are preserved instead of redesigning the UI.
+The existing Velora frontend is preserved, with a Node backend for catalog, playback, accounts, and live TV.
 
 ## What is implemented
 
@@ -26,7 +26,11 @@ npm start
 
 Open http://localhost:3000
 
-Without `TMDB_API_TOKEN`, the app uses the recovered catalog snapshots. Those old non-TMDB IDs may not resolve to playback until TMDB is configured because Videasy is intentionally connected through TMDB IDs.
+Without `TMDB_API_TOKEN`, the app uses the catalog snapshots. Snapshot titles still display, but their legacy IDs require TMDB to map them to playback IDs.
+
+## Vercel
+
+The included `vercel.json` keeps the intro, app, static assets, and every `/api/*` route connected to the Node backend. Add `TMDB_API_TOKEN` (or `TMDB_API_KEY`) to the Vercel project before deploying so snapshot titles can resolve to playable TMDB IDs.
 
 ## Architecture
 
