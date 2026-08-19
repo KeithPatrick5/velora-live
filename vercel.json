@@ -1,16 +1,22 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "rewrites": [
-    { "source": "/", "destination": "/intro.html" },
-    { "source": "/app", "destination": "/index.html" },
-    { "source": "/api/:path*", "destination": "/api/index" }
+    {
+      "source": "/",
+      "destination": "/intro.html"
+    },
+    {
+      "source": "/app",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/api/:path*",
+      "destination": "/api/index"
+    }
   ],
   "functions": {
     "api/index.js": {
-      "includeFiles": [
-        "public/api-snapshot/**",
-        "data/**"
-      ]
+      "includeFiles": "{public/api-snapshot/**,data/**}"
     }
   }
 }
