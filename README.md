@@ -12,7 +12,7 @@ Open `http://localhost:8080`.
 
 ## Deploy
 
-Deploy the folder root to Vercel with no build command. Search and browsing use the static `data/title-index.json` catalog, so the site has no server or API dependency.
+Deploy the folder root to Vercel with no build command. Set `TMDB_READ_TOKEN` (recommended) or `TMDB_API_KEY` in Vercel for current trending titles, posters, browsing, and search metadata. Playback remains on Videasy.
 
 ## Playback
 

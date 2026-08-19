@@ -1,50 +1,73 @@
 const image = (path) => `https://image.tmdb.org/t/p/w500${path}`;
 const CATALOG_SIZE = 100000;
-const PAGE_SIZE = 40;
 
-const catalog = [
-  [693134,"Dune: Part Two","movie",2024,"PG-13","2h 46m",98,["Sci-Fi","Adventure","Drama"],"/1pdfLvkbY9ohJlCjQH2CZjjYVvJ.jpg"],
-  [872585,"Oppenheimer","movie",2023,"R","3h 1m",97,["Drama","History"],"/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg"],
-  [414906,"The Batman","movie",2022,"PG-13","2h 57m",96,["Crime","Mystery","Action"],"/74xTEgt7R36Fpooo50r9T25onhq.jpg"],
-  [299534,"Avengers: Endgame","movie",2019,"PG-13","3h 1m",95,["Action","Sci-Fi","Adventure"],"/or06FN3Dka5tukK1e9sl16pB3iy.jpg"],
-  [157336,"Interstellar","movie",2014,"PG-13","2h 49m",99,["Sci-Fi","Drama","Adventure"],"/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg"],
-  [27205,"Inception","movie",2010,"PG-13","2h 28m",98,["Sci-Fi","Thriller","Action"],"/9gk7adHYeDvHkCSEqAvQNLV5Uge.jpg"],
-  [155,"The Dark Knight","movie",2008,"PG-13","2h 32m",99,["Action","Crime","Drama"],"/qJ2tW6WMUDux911r6m7haRef0WH.jpg"],
-  [361743,"Top Gun: Maverick","movie",2022,"PG-13","2h 11m",96,["Action","Drama"],"/62HCnUTziyWcpDaBO2i1DX17ljH.jpg"],
-  [634649,"Spider-Man: No Way Home","movie",2021,"PG-13","2h 28m",95,["Action","Adventure","Sci-Fi"],"/1g0dhYtq4irTY1GPXvft6k4YLjm.jpg"],
-  [278,"The Shawshank Redemption","movie",1994,"R","2h 22m",99,["Drama"],"/q6y0Go1tsGEsmtFryDOJo3dEmqu.jpg"],
-  [238,"The Godfather","movie",1972,"R","2h 55m",99,["Crime","Drama"],"/3bhkrj58Vtu7enYsRolD1fZdja1.jpg"],
-  [680,"Pulp Fiction","movie",1994,"R","2h 34m",97,["Crime","Drama"],"/d5iIlFn5s0ImszYzBPb8JPIfbXD.jpg"],
-  [550,"Fight Club","movie",1999,"R","2h 19m",97,["Drama","Thriller"],"/pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg"],
-  [533535,"Deadpool & Wolverine","movie",2024,"R","2h 8m",94,["Action","Comedy","Sci-Fi"],"/8cdWjvZQUExUUTzyp4t6EDMubfO.jpg"],
-  [945961,"Alien: Romulus","movie",2024,"R","1h 59m",92,["Horror","Sci-Fi"],"/b33nnKl1GSFbao4l3fZDDqsMx0F.jpg"],
-  [933260,"The Substance","movie",2024,"R","2h 21m",93,["Horror","Drama","Sci-Fi"],"/lqoMzCcZYEFK729d6qzt349fB4o.jpg"],
-  [1022789,"Inside Out 2","movie",2024,"PG","1h 36m",95,["Animation","Family","Comedy"],"/vpnVM9B6NMmQpWeZvzLvDESb2QY.jpg"],
-  [1184918,"The Wild Robot","movie",2024,"PG","1h 42m",97,["Animation","Family","Sci-Fi"],"/wTnV3PCVW5O92JMrFvvrRcV39RU.jpg"],
-  [1396,"Breaking Bad","tv",2008,"TV-MA","5 seasons",99,["Crime","Drama","Thriller"],"/ggFHVNu6YYI5L9pCfOacjizRGt.jpg"],
-  [100088,"The Last of Us","tv",2023,"TV-MA","2 seasons",98,["Drama","Sci-Fi","Action"],"/uKvVjHNqB5VmOrdxqAt2F7J78ED.jpg"],
-  [66732,"Stranger Things","tv",2016,"TV-14","4 seasons",97,["Sci-Fi","Mystery","Drama"],"/49WJfeN0moxb9IPfGn8AIqMGskD.jpg"],
-  [76479,"The Boys","tv",2019,"TV-MA","4 seasons",96,["Action","Comedy","Sci-Fi"],"/2zmTngn1tYC1AvfnrFLhxeD82hz.jpg"],
-  [1399,"Game of Thrones","tv",2011,"TV-MA","8 seasons",97,["Fantasy","Drama","Action"],"/1XS1oqL89opfnbLl8WnZY1O1uJx.jpg"],
-  [94997,"House of the Dragon","tv",2022,"TV-MA","2 seasons",95,["Fantasy","Drama","Action"],"/1X4h40fcB4WWUmIBK0auT4zRBAV.jpg"],
-  [95396,"Severance","tv",2022,"TV-MA","2 seasons",99,["Mystery","Sci-Fi","Drama"],"/pPHpeI2X1qEd1CS1SeyrdhZ4qnT.jpg"],
-  [126308,"Shōgun","tv",2024,"TV-MA","1 season",98,["Drama","History","War"],"/7O4iVfOMQmdCSxhOg1WnzG1AgYT.jpg"],
-  [106379,"Fallout","tv",2024,"TV-MA","1 season",96,["Sci-Fi","Action","Adventure"],"/AnsSKR9LuK0T9bAOcPVA3PUvyWj.jpg"],
-  [60059,"Better Call Saul","tv",2015,"TV-MA","6 seasons",99,["Crime","Drama"],"/fC2HDm5t0kHl7mTm7jxMR31b7by.jpg"],
-  [119051,"Wednesday","tv",2022,"TV-14","1 season",94,["Mystery","Comedy","Fantasy"],"/9PFonBhy4cQy7Jz20NpMygczOkv.jpg"],
-  [93405,"Squid Game","tv",2021,"TV-MA","2 seasons",96,["Thriller","Drama","Mystery"],"/dDlEmu3EZ0Pgg93K2SVNLCjCSvE.jpg"]
-].map(([id,title,type,year,maturity,runtime,match,genres,poster]) => ({id,title,type,year,maturity,runtime,match,genres,poster:image(poster)}));
+let catalog = [
+  [1368337,"The Odyssey","movie",2026,"/5rhTDKUhPYvpdQIijFIs5VoWsON.jpg"],
+  [1339713,"Obsession","movie",2026,"/bRwnj8WEKBCvmfeUNOukJPwB43K.jpg"],
+  [969681,"Spider-Man: Brand New Day","movie",2026,"/iPOn6DinuVyLY17YM9mKuPofV08.jpg"],
+  [1323244,"Rage of Stars","movie",2026,"/oLld47ZT1I3iecM3OWhIphohQUJ.jpg"],
+  [1315772,"Minions & Monsters","movie",2026,"/4LwvU9SZc8QQzW1X1FAPhNbXnEU.jpg"],
+  [1375646,"Colony","movie",2026,"/tN799oUR0f1gUKDYdMNrDaY7I51.jpg"],
+  [1084244,"Toy Story 5","movie",2026,"/sfQtVlIHljToOwYjhe21KPGzZWK.jpg"],
+  [1284041,"The Last House","movie",2026,"/6JU7E8Vv2M11egkctWVOScxWR75.jpg"],
+  [1284465,"The Death of Robin Hood","movie",2026,"/92Tsfx7SFafOqWsotvrlJbHyehd.jpg"],
+  [1101383,"The End of Oak Street","movie",2026,"/fYXqpgPmHMphSF2W30GbTeJVIa5.jpg"],
+  [1212763,"Evil Dead Burn","movie",2026,"/uRxrNXQWkHoENm3nwVOZDYSCx2F.jpg"],
+  [1108427,"Moana","movie",2026,"/zKVgiv5qHCvCLT4A2ymJi5QeXDH.jpg"],
+  [1275779,"Disclosure Day","movie",2026,"/AnJ8IQJI23hNpYXVNaythu061Ru.jpg"],
+  [1081003,"Supergirl","movie",2026,"/1QCWdqzTfh2x9UylVpspIU6QTuM.jpg"],
+  [1307118,"Soulm8te","movie",2026,"/bNErActDctl6cdUGw9pnjSCmyhQ.jpg"],
+  [1083381,"Backrooms","movie",2026,"/rhGx6E3qRNMgj3i5su2oukNHwIQ.jpg"],
+  [1273221,"Scary Movie","movie",2026,"/znHT8peERZRWG1ME3r0Db0EV8k8.jpg"],
+  [108978,"Reacher","tv",2022,"/f1VCQIG2iCyOookdgOzwtUpwWC0.jpg"],
+  [113962,"Lioness","tv",2023,"/rzpHPSEgPTpRs8EHbygwsOw7jC0.jpg"],
+  [5920,"The Mentalist","tv",2008,"/acYXu4KaDj1NIkMgObnhe4C4a0T.jpg"],
+  [94997,"House of the Dragon","tv",2022,"/7V0Ebks0GgpKvQ7QbLAIdX5dos4.jpg"],
+  [95350,"Lanterns","tv",2026,"/gpC7h43xPMEV3goYMQShfJbTtLq.jpg"],
+  [125988,"Silo","tv",2023,"/gMYZZvnkVNTqSVnVCphWbPXwWwb.jpg"],
+  [79744,"The Rookie","tv",2018,"/70kTz0OmjjZe7zHvIDrq2iKW7PJ.jpg"],
+  [456,"The Simpsons","tv",1989,"/uWpG7GqfKGQqX4YMAo3nv5OrglV.jpg"],
+  [1434,"Family Guy","tv",1999,"/3PFsEuAiyLkWsP4GG6dIV37Q6gu.jpg"],
+  [4614,"NCIS","tv",2003,"/mBcu8d6x6zB1el3MPNl7cZQEQ31.jpg"],
+  [1622,"Supernatural","tv",2005,"/8iixmfGx5EIFPdpNvB2JvI3VIqX.jpg"],
+  [60625,"Rick and Morty","tv",2013,"/owhkU6KRqdXoUQpjV8uyZGPtX58.jpg"],
+  [1399,"Game of Thrones","tv",2011,"/1XS1oqL89opfnbLl8WnZY1O1uJx.jpg"],
+  [124364,"FROM","tv",2022,"/pRtJagIxpfODzzb0T0NAvZSzErC.jpg"],
+  [4057,"Criminal Minds","tv",2005,"/hWSb4UnIjlTvnvrP98NbFSO60HA.jpg"],
+  [1408,"House","tv",2004,"/3Cz7ySOQJmqiuTdrc6CY0r65yDI.jpg"]
+].map(([id,title,type,year,poster]) => ({id,title,type,year:String(year),poster:image(poster)}));
 
-const featured = catalog[0];
-const movies = catalog.filter((item) => item.type === "movie");
-const shows = catalog.filter((item) => item.type === "tv");
-const rows = [
-  ["Trending Now", catalog.slice(0,10)],
-  ["Binge-Worthy Series", shows],
-  ["Critically Acclaimed", catalog.filter((item) => item.match >= 97)],
-  ["Movie Night", movies.slice(7)]
-];
-const featuredLookup = new Map(catalog.map((item) => [`${item.type}:${item.id}`, item]));
+const featured = {
+  ...catalog[0],
+  maturity:"PG-13",
+  runtime:"2h 35m",
+  match:99,
+  genres:["Adventure","Action","Fantasy"],
+  overview:"Odysseus, the legendary King of Ithaca, begins a dangerous journey home after the Trojan War, facing gods, monsters and impossible trials."
+};
+
+function buildHomeRows(items) {
+  const pinned = [
+    items.find((item) => item.type === "movie" && item.id === 1368337),
+    items.find((item) => item.type === "movie" && item.id === 1339713)
+  ].filter(Boolean);
+  const ordered = [...new Map([...pinned, ...items].map((item) => [`${item.type}:${item.id}`, item])).values()];
+  const movies = ordered.filter((item) => item.type === "movie");
+  const shows = ordered.filter((item) => item.type === "tv");
+  const mixed = [];
+  for (let index = 0; index < Math.max(movies.length, shows.length); index += 1) {
+    if (movies[index]) mixed.push(movies[index]);
+    if (shows[index]) mixed.push(shows[index]);
+  }
+  return [
+    ["Trending Now", ordered.slice(0, 16)],
+    ["Movies Everyone’s Watching", movies.slice(0, 16)],
+    ["Popular Series", shows.slice(0, 16)],
+    ["More to Watch", mixed.slice(10, 26)]
+  ];
+}
+
+let rows = buildHomeRows(catalog);
 
 const homeView = document.querySelector(".home-view");
 const browseView = document.querySelector(".browse-view");
@@ -62,7 +85,6 @@ let browseItems = [];
 let browsePage = 1;
 let requestSerial = 0;
 let searchTimer;
-let titleIndexPromise;
 
 function safeJson(value, fallback) {
   try { return JSON.parse(value); } catch { return fallback; }
@@ -88,62 +110,6 @@ function normalizeItem(item) {
 
 function itemKey(item) { return `${item.type}:${item.id}`; }
 
-function indexedItem(type, entry) {
-  const [id, title] = entry;
-  return featuredLookup.get(`${type}:${id}`) || normalizeItem({id, type, title});
-}
-
-function loadTitleIndex() {
-  if (!titleIndexPromise) {
-    titleIndexPromise = fetch("/data/title-index.json", {headers:{accept:"application/json"}})
-      .then((response) => {
-        if (!response.ok) throw new Error(`Catalog index failed (${response.status})`);
-        return response.json();
-      })
-      .then((index) => {
-        if (!Array.isArray(index.movies) || !Array.isArray(index.tv)) throw new Error("Invalid catalog index");
-        return index;
-      })
-      .catch((error) => {
-        titleIndexPromise = undefined;
-        throw error;
-      });
-  }
-  return titleIndexPromise;
-}
-
-function fold(value) {
-  return String(value).normalize("NFKD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
-}
-
-function searchTitleIndex(index, query, typeFilter, limit = 80) {
-  const term = fold(query);
-  const matches = [];
-  const sources = typeFilter === "movie"
-    ? [["movie", index.movies]]
-    : typeFilter === "tv"
-      ? [["tv", index.tv]]
-      : [["movie", index.movies], ["tv", index.tv]];
-
-  for (const [type, entries] of sources) {
-    for (let rank = 0; rank < entries.length; rank += 1) {
-      const [id, title] = entries[rank];
-      const normalizedTitle = fold(title);
-      const position = normalizedTitle.indexOf(term);
-      if (position < 0) continue;
-      const relevancePenalty = normalizedTitle === term ? 0 : position === 0 ? 500 : normalizedTitle.includes(` ${term}`) ? 1000 : 2500;
-      const score = rank + relevancePenalty + Math.abs(normalizedTitle.length - term.length) * 40;
-      matches.push({score, rank, item:indexedItem(type, [id, title])});
-    }
-  }
-
-  return matches
-    .sort((left, right) => left.score - right.score || left.rank - right.rank)
-    .slice(0, limit)
-    .map((match) => match.item)
-    .filter(Boolean);
-}
-
 const storedItems = safeJson(localStorage.getItem("noctra-saved-items") || "[]", []);
 let savedItems = Array.isArray(storedItems) ? storedItems.map(normalizeItem).filter(Boolean) : [];
 if (!savedItems.length) {
@@ -151,7 +117,7 @@ if (!savedItems.length) {
   if (Array.isArray(legacyIds)) savedItems = catalog.filter((item) => legacyIds.includes(item.id));
 }
 
-document.querySelector("#hero").style.backgroundImage = "url(https://image.tmdb.org/t/p/original/xOMo8BRK7PfcJv9JCnx7s5hj0PX.jpg)";
+document.querySelector("#hero").style.backgroundImage = "url(https://image.tmdb.org/t/p/original/r57L2UBLPKcHdZQYg8tagv9XqK2.jpg)";
 
 function escapeHtml(value) {
   return String(value).replace(/[&<>'"]/g, (character) => ({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"})[character]);
@@ -253,6 +219,26 @@ function renderGrid() {
   clearSearch.hidden = !search.value;
 }
 
+async function getCatalog(params) {
+  const response = await fetch(`/api/catalog?${new URLSearchParams(params)}`, {headers:{accept:"application/json"}});
+  if (!response.ok) throw new Error(`Catalog request failed (${response.status})`);
+  return response.json();
+}
+
+async function loadHome() {
+  try {
+    const data = await getCatalog({mode:"home"});
+    const incoming = (data.results || []).map(normalizeItem).filter((item) => item?.poster);
+    if (incoming.length < 20) return;
+    const pinned = catalog.filter((item) => item.type === "movie" && (item.id === 1368337 || item.id === 1339713));
+    catalog = [...new Map([...pinned, ...incoming].map((item) => [itemKey(item), item])).values()];
+    rows = buildHomeRows(catalog);
+    renderRows();
+  } catch (error) {
+    console.warn("[catalog:home] Using current built-in titles", error);
+  }
+}
+
 async function loadBrowse(type, append = false) {
   const serial = ++requestSerial;
   const nextPage = append ? browsePage + 1 : 1;
@@ -264,18 +250,16 @@ async function loadBrowse(type, append = false) {
   }
   setStatus(append ? "Loading more titles…" : "Loading the catalog…", true);
   try {
-    const index = await loadTitleIndex();
+    const data = await getCatalog({type, page:String(nextPage)});
     if (serial !== requestSerial || activeTab !== type) return;
-    const entries = type === "tv" ? index.tv : index.movies;
-    const start = (nextPage - 1) * PAGE_SIZE;
-    const incoming = entries.slice(start, start + PAGE_SIZE).map((entry) => indexedItem(type, entry)).filter(Boolean);
+    const incoming = (data.results || []).map(normalizeItem).filter((item) => item?.poster);
     const merged = append ? [...browseItems, ...incoming] : incoming;
     browseItems = [...new Map(merged.map((item) => [itemKey(item), item])).values()];
     browsePage = nextPage;
     renderGrid();
     const label = type === "tv" ? "series" : "movies";
-    setStatus(`${browseItems.length.toLocaleString()} of ${entries.length.toLocaleString()} ${label} loaded • page ${browsePage.toLocaleString()} of ${Math.ceil(entries.length / PAGE_SIZE).toLocaleString()}`);
-    loadMore.hidden = start + incoming.length >= entries.length;
+    setStatus(`${browseItems.length.toLocaleString()} ${label} loaded • page ${browsePage.toLocaleString()} • posters included`);
+    loadMore.hidden = incoming.length < 20;
   } catch (error) {
     if (serial !== requestSerial) return;
     setStatus("");
@@ -299,13 +283,14 @@ async function runSearch(term) {
   document.querySelector("#empty-state").hidden = true;
   setStatus(`Searching for “${query}”…`, true);
   try {
-    const index = await loadTitleIndex();
+    const data = await getCatalog({mode:"search", q:query});
     if (serial !== requestSerial || search.value.trim() !== query) return;
-    const typeFilter = activeTab === "movies" ? "movie" : activeTab === "tv" ? "tv" : "all";
-    const results = searchTitleIndex(index, query, typeFilter);
+    let results = (data.results || []).map(normalizeItem).filter((item) => item?.poster);
+    if (activeTab === "movies") results = results.filter((item) => item.type === "movie");
+    if (activeTab === "tv") results = results.filter((item) => item.type === "tv");
     browseItems = results;
     renderGrid();
-    setStatus(`${results.length} result${results.length === 1 ? "" : "s"} for “${query}” • ${Number(index.count || CATALOG_SIZE).toLocaleString()} titles indexed`);
+    setStatus(`${results.length} result${results.length === 1 ? "" : "s"} for “${query}” • ${Number(data.catalogSize || CATALOG_SIZE).toLocaleString()} titles indexed • posters included`);
     if (!results.length) showEmpty(`Nothing found for “${query}”.`, "Check the spelling or try another title.");
   } catch (error) {
     if (serial !== requestSerial) return;
@@ -392,3 +377,4 @@ document.addEventListener("keydown", (event) => { if (event.key === "Escape" && 
 
 updateHeroList();
 renderRows();
+loadHome();
