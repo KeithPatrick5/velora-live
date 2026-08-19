@@ -1,6 +1,6 @@
 # Noctra
 
-Noctra is a mobile-first movie and series browser with a dark cinematic interface, a 100,000-title search index, live movie and series browsing, a local My List, and Videasy playback.
+Noctra is a mobile-first movie and series browser with a dark cinematic interface, a 100,000-title search index, movie and series browsing, a local My List, and Videasy playback.
 
 ## Run locally
 
@@ -12,7 +12,7 @@ Open `http://localhost:8080`.
 
 ## Deploy
 
-Deploy the folder root to Vercel with no build command. The `api/catalog.js` serverless function supplies live catalog search and browsing.
+Deploy the folder root to Vercel with no build command. Search and browsing use the static `data/title-index.json` catalog, so the site has no server or API dependency.
 
 ## Playback
 

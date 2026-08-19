@@ -1,5 +1,6 @@
 const image = (path) => `https://image.tmdb.org/t/p/w500${path}`;
 const CATALOG_SIZE = 100000;
+const PAGE_SIZE = 40;
 
 const catalog = [
   [693134,"Dune: Part Two","movie",2024,"PG-13","2h 46m",98,["Sci-Fi","Adventure","Drama"],"/1pdfLvkbY9ohJlCjQH2CZjjYVvJ.jpg"],
@@ -43,6 +44,7 @@ const rows = [
   ["Critically Acclaimed", catalog.filter((item) => item.match >= 97)],
   ["Movie Night", movies.slice(7)]
 ];
+const featuredLookup = new Map(catalog.map((item) => [`${item.type}:${item.id}`, item]));
 
 const homeView = document.querySelector(".home-view");
 const browseView = document.querySelector(".browse-view");
@@ -60,6 +62,7 @@ let browseItems = [];
 let browsePage = 1;
 let requestSerial = 0;
 let searchTimer;
+let titleIndexPromise;
 
 function safeJson(value, fallback) {
   try { return JSON.parse(value); } catch { return fallback; }
@@ -84,6 +87,62 @@ function normalizeItem(item) {
 }
 
 function itemKey(item) { return `${item.type}:${item.id}`; }
+
+function indexedItem(type, entry) {
+  const [id, title] = entry;
+  return featuredLookup.get(`${type}:${id}`) || normalizeItem({id, type, title});
+}
+
+function loadTitleIndex() {
+  if (!titleIndexPromise) {
+    titleIndexPromise = fetch("/data/title-index.json", {headers:{accept:"application/json"}})
+      .then((response) => {
+        if (!response.ok) throw new Error(`Catalog index failed (${response.status})`);
+        return response.json();
+      })
+      .then((index) => {
+        if (!Array.isArray(index.movies) || !Array.isArray(index.tv)) throw new Error("Invalid catalog index");
+        return index;
+      })
+      .catch((error) => {
+        titleIndexPromise = undefined;
+        throw error;
+      });
+  }
+  return titleIndexPromise;
+}
+
+function fold(value) {
+  return String(value).normalize("NFKD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+}
+
+function searchTitleIndex(index, query, typeFilter, limit = 80) {
+  const term = fold(query);
+  const matches = [];
+  const sources = typeFilter === "movie"
+    ? [["movie", index.movies]]
+    : typeFilter === "tv"
+      ? [["tv", index.tv]]
+      : [["movie", index.movies], ["tv", index.tv]];
+
+  for (const [type, entries] of sources) {
+    for (let rank = 0; rank < entries.length; rank += 1) {
+      const [id, title] = entries[rank];
+      const normalizedTitle = fold(title);
+      const position = normalizedTitle.indexOf(term);
+      if (position < 0) continue;
+      const relevancePenalty = normalizedTitle === term ? 0 : position === 0 ? 500 : normalizedTitle.includes(` ${term}`) ? 1000 : 2500;
+      const score = rank + relevancePenalty + Math.abs(normalizedTitle.length - term.length) * 40;
+      matches.push({score, rank, item:indexedItem(type, [id, title])});
+    }
+  }
+
+  return matches
+    .sort((left, right) => left.score - right.score || left.rank - right.rank)
+    .slice(0, limit)
+    .map((match) => match.item)
+    .filter(Boolean);
+}
 
 const storedItems = safeJson(localStorage.getItem("noctra-saved-items") || "[]", []);
 let savedItems = Array.isArray(storedItems) ? storedItems.map(normalizeItem).filter(Boolean) : [];
@@ -194,12 +253,6 @@ function renderGrid() {
   clearSearch.hidden = !search.value;
 }
 
-async function getCatalog(params) {
-  const response = await fetch(`/api/catalog?${new URLSearchParams(params)}`, {headers:{accept:"application/json"}});
-  if (!response.ok) throw new Error(`Catalog request failed (${response.status})`);
-  return response.json();
-}
-
 async function loadBrowse(type, append = false) {
   const serial = ++requestSerial;
   const nextPage = append ? browsePage + 1 : 1;
@@ -211,15 +264,18 @@ async function loadBrowse(type, append = false) {
   }
   setStatus(append ? "Loading more titles…" : "Loading the catalog…", true);
   try {
-    const data = await getCatalog({type, page:String(nextPage)});
+    const index = await loadTitleIndex();
     if (serial !== requestSerial || activeTab !== type) return;
-    const incoming = (data.results || []).map(normalizeItem).filter(Boolean);
+    const entries = type === "tv" ? index.tv : index.movies;
+    const start = (nextPage - 1) * PAGE_SIZE;
+    const incoming = entries.slice(start, start + PAGE_SIZE).map((entry) => indexedItem(type, entry)).filter(Boolean);
     const merged = append ? [...browseItems, ...incoming] : incoming;
     browseItems = [...new Map(merged.map((item) => [itemKey(item), item])).values()];
     browsePage = nextPage;
     renderGrid();
-    setStatus(`${browseItems.length} ${type === "tv" ? "series" : "movies"} loaded • page ${browsePage} of 500`);
-    loadMore.hidden = incoming.length < 20;
+    const label = type === "tv" ? "series" : "movies";
+    setStatus(`${browseItems.length.toLocaleString()} of ${entries.length.toLocaleString()} ${label} loaded • page ${browsePage.toLocaleString()} of ${Math.ceil(entries.length / PAGE_SIZE).toLocaleString()}`);
+    loadMore.hidden = start + incoming.length >= entries.length;
   } catch (error) {
     if (serial !== requestSerial) return;
     setStatus("");
@@ -243,37 +299,19 @@ async function runSearch(term) {
   document.querySelector("#empty-state").hidden = true;
   setStatus(`Searching for “${query}”…`, true);
   try {
-    const data = await getCatalog({mode:"search", q:query});
+    const index = await loadTitleIndex();
     if (serial !== requestSerial || search.value.trim() !== query) return;
-    let results = (data.results || []).map(normalizeItem).filter(Boolean);
-    if (activeTab === "movies") results = results.filter((item) => item.type === "movie");
-    if (activeTab === "tv") results = results.filter((item) => item.type === "tv");
+    const typeFilter = activeTab === "movies" ? "movie" : activeTab === "tv" ? "tv" : "all";
+    const results = searchTitleIndex(index, query, typeFilter);
     browseItems = results;
     renderGrid();
-    setStatus(`${results.length} result${results.length === 1 ? "" : "s"} for “${query}” • ${Number(data.catalogSize || CATALOG_SIZE).toLocaleString()} titles indexed`);
+    setStatus(`${results.length} result${results.length === 1 ? "" : "s"} for “${query}” • ${Number(index.count || CATALOG_SIZE).toLocaleString()} titles indexed`);
     if (!results.length) showEmpty(`Nothing found for “${query}”.`, "Check the spelling or try another title.");
-    enrichSearch(query, serial);
   } catch (error) {
     if (serial !== requestSerial) return;
     setStatus("");
     showEmpty("Search temporarily unavailable.", "Please try again in a moment.");
     console.error("[catalog:search]", error);
-  }
-}
-
-async function enrichSearch(query, serial) {
-  try {
-    const data = await getCatalog({mode:"enrich", q:query});
-    if (serial !== requestSerial || search.value.trim() !== query) return;
-    let richResults = (data.results || []).map(normalizeItem).filter(Boolean);
-    if (activeTab === "movies") richResults = richResults.filter((item) => item.type === "movie");
-    if (activeTab === "tv") richResults = richResults.filter((item) => item.type === "tv");
-    if (!richResults.length) return;
-    const richKeys = new Set(richResults.map(itemKey));
-    browseItems = [...richResults, ...browseItems.filter((item) => !richKeys.has(itemKey(item)))].slice(0, 80);
-    renderGrid();
-  } catch (error) {
-    console.warn("[catalog:enrich]", error);
   }
 }
 
