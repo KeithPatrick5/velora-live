@@ -1,0 +1,4 @@
+Velora v29
+Known-good movie/show playback path: Videasy-only + untouched player-enhance-v13.js
+First-visit intro: standalone intro.html route outside React
+Package layout: files at ZIP root for direct merge into /Users/admin/Desktop/velora-live

@@ -1,0 +1,73 @@
+/* v19: Safari-safe first-visit intro. Does not touch movie/show/live player loading UI. */
+#veloraSiteIntroV19 {
+  --intro-progress: 6%;
+  position: fixed;
+  inset: 0;
+  z-index: 2147483647;
+  overflow: hidden;
+  pointer-events: none;
+  background: #000;
+  opacity: 1;
+  transition: opacity .32s cubic-bezier(.2,.8,.2,1);
+}
+#veloraSiteIntroV19.out { opacity: 0; }
+#veloraSiteIntroVideoV19,
+#veloraSiteIntroV19 .veloraIntroHold {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+#veloraSiteIntroVideoV19 {
+  display: block;
+  object-fit: cover;
+  background: #000;
+}
+#veloraSiteIntroV19 .veloraIntroHold {
+  display: grid;
+  place-items: center;
+  opacity: 0;
+  background: #050505 url('/media/velora-site-intro-poster.jpg') center/cover no-repeat;
+  transition: opacity .18s ease;
+}
+#veloraSiteIntroV19.holding #veloraSiteIntroVideoV19 { opacity: 0; }
+#veloraSiteIntroV19.holding .veloraIntroHold { opacity: 1; }
+#veloraSiteIntroV19 .veloraIntroHold::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 50%, rgba(0,0,0,.08), rgba(0,0,0,.5) 68%, rgba(0,0,0,.82));
+}
+#veloraSiteIntroV19 .veloraIntroHoldV {
+  position: relative;
+  z-index: 1;
+  color: #f21d43;
+  font: 800 clamp(48px,8vw,86px)/1 Geist,system-ui,sans-serif;
+  text-shadow: 0 0 28px rgba(242,29,67,.42);
+}
+#veloraSiteIntroV19 .veloraIntroProgress {
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  bottom: max(34px,4.5vh);
+  width: min(300px,48vw);
+  height: 2px;
+  transform: translateX(-50%);
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(255,255,255,.13);
+}
+#veloraSiteIntroV19 .veloraIntroProgress i {
+  display: block;
+  width: var(--intro-progress);
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg,#781022,#ef1d43,#ff6b80);
+  box-shadow: 0 0 12px rgba(239,29,67,.5);
+  transition: width .16s linear;
+}
+@media (prefers-reduced-motion: reduce) {
+  #veloraSiteIntroVideoV19 { display:none; }
+  #veloraSiteIntroV19 .veloraIntroHold { opacity:1; }
+  #veloraSiteIntroV19 .veloraIntroProgress i { transition:none; }
+}

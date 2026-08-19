@@ -1,0 +1,152 @@
+[
+  {
+    "url": "https://streamforge-lab.emichaelm.chatgpt.site/assets/_vinext_fonts/geist-8ac0455e797f/geist-ff2310f5.woff2",
+    "status": 200,
+    "contentType": "application/octet-stream",
+    "error": null
+  },
+  {
+    "url": "https://streamforge-lab.emichaelm.chatgpt.site/assets/_vinext_fonts/geist-8ac0455e797f/geist-875ccdd4.woff2",
+    "status": 200,
+    "contentType": "application/octet-stream",
+    "error": null
+  },
+  {
+    "url": "https://streamforge-lab.emichaelm.chatgpt.site/assets/_vinext_fonts/geist-8ac0455e797f/geist-001175b1.woff2",
+    "status": 200,
+    "contentType": "application/octet-stream",
+    "error": null
+  },
+  {
+    "url": "https://streamforge-lab.emichaelm.chatgpt.site/assets/_vinext_fonts/geist-8ac0455e797f/geist-52306abf.woff2",
+    "status": 200,
+    "contentType": "application/octet-stream",
+    "error": null
+  },
+  {
+    "url": "https://streamforge-lab.emichaelm.chatgpt.site/assets/_vinext_fonts/geist-8ac0455e797f/geist-98bbbccb.woff2",
+    "status": 200,
+    "contentType": "application/octet-stream",
+    "error": null
+  },
+  {
+    "url": "https://streamforge-lab.emichaelm.chatgpt.site/assets/_vinext_fonts/geist-mono-00e989178794/geist-mono-f6b33328.woff2",
+    "status": 200,
+    "contentType": "application/octet-stream",
+    "error": null
+  },
+  {
+    "url": "https://streamforge-lab.emichaelm.chatgpt.site/assets/_vinext_fonts/geist-mono-00e989178794/geist-mono-44e03052.woff2",
+    "status": 200,
+    "contentType": "application/octet-stream",
+    "error": null
+  },
+  {
+    "url": "https://streamforge-lab.emichaelm.chatgpt.site/assets/_vinext_fonts/geist-mono-00e989178794/geist-mono-0638449e.woff2",
+    "status": 200,
+    "contentType": "application/octet-stream",
+    "error": null
+  },
+  {
+    "url": "https://streamforge-lab.emichaelm.chatgpt.site/assets/_vinext_fonts/geist-mono-00e989178794/geist-mono-44745446.woff2",
+    "status": 200,
+    "contentType": "application/octet-stream",
+    "error": null
+  },
+  {
+    "url": "https://streamforge-lab.emichaelm.chatgpt.site/assets/_vinext_fonts/geist-mono-00e989178794/geist-mono-013b2f2f.woff2",
+    "status": 200,
+    "contentType": "application/octet-stream",
+    "error": null
+  },
+  {
+    "url": "https://streamforge-lab.emichaelm.chatgpt.site/assets/_vinext_fonts/geist-mono-00e989178794/geist-mono-971fb274.woff2",
+    "status": 200,
+    "contentType": "application/octet-stream",
+    "error": null
+  },
+  {
+    "url": "https://streamforge-lab.emichaelm.chatgpt.site/assets/index-BfbMXOly.css",
+    "status": 200,
+    "contentType": "text/css",
+    "error": null
+  },
+  {
+    "url": "https://streamforge-lab.emichaelm.chatgpt.site/assets/rolldown-runtime-S-ySWqyJ.js",
+    "status": 200,
+    "contentType": "text/javascript",
+    "error": null
+  },
+  {
+    "url": "https://streamforge-lab.emichaelm.chatgpt.site/assets/layout-segment-context-B4DBS6Dl.js",
+    "status": 200,
+    "contentType": "text/javascript",
+    "error": null
+  },
+  {
+    "url": "https://streamforge-lab.emichaelm.chatgpt.site/assets/index-BTzUZ7Xu.js",
+    "status": 200,
+    "contentType": "text/javascript",
+    "error": null
+  },
+  {
+    "url": "https://streamforge-lab.emichaelm.chatgpt.site/assets/framework-CXnKph_e.js",
+    "status": 200,
+    "contentType": "text/javascript",
+    "error": null
+  },
+  {
+    "url": "https://streamforge-lab.emichaelm.chatgpt.site/assets/page-CBuuWGRn.js",
+    "status": 200,
+    "contentType": "text/javascript",
+    "error": null
+  },
+  {
+    "url": "https://streamforge-lab.emichaelm.chatgpt.site/api/catalog",
+    "status": 200,
+    "contentType": "application/json",
+    "error": null
+  },
+  {
+    "url": "https://streamforge-lab.emichaelm.chatgpt.site/api/me",
+    "status": 401,
+    "contentType": "application/json",
+    "error": null
+  },
+  {
+    "url": "https://streamforge-lab.emichaelm.chatgpt.site/",
+    "status": 200,
+    "contentType": "text/html; charset=utf-8",
+    "error": null
+  },
+  {
+    "url": "https://streamforge-lab.emichaelm.chatgpt.site/api/catalog",
+    "status": 200,
+    "contentType": "application/json",
+    "error": null
+  },
+  {
+    "url": "https://streamforge-lab.emichaelm.chatgpt.site/api/catalog?section=movies",
+    "status": 200,
+    "contentType": "application/json",
+    "error": null
+  },
+  {
+    "url": "https://streamforge-lab.emichaelm.chatgpt.site/api/catalog?section=shows",
+    "status": 200,
+    "contentType": "application/json",
+    "error": null
+  },
+  {
+    "url": "https://streamforge-lab.emichaelm.chatgpt.site/api/catalog?section=anime",
+    "status": 200,
+    "contentType": "application/json",
+    "error": null
+  },
+  {
+    "url": "https://streamforge-lab.emichaelm.chatgpt.site/api/me",
+    "status": 401,
+    "contentType": "application/json",
+    "error": null
+  }
+]

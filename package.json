@@ -1,12 +1,14 @@
 {
-  "name": "velora-live",
-  "version": "1.0.32",
+  "name": "velora-dulo-recovered",
+  "version": "1.0.29",
   "private": true,
+  "type": "module",
   "scripts": {
-    "dev": "node --watch server.mjs",
-    "start": "node server.mjs"
+    "dev": "node --watch server.js",
+    "start": "node server.js",
+    "test": "node --test"
   },
   "engines": {
-    "node": "24.x"
+    "node": ">=20"
   }
 }
