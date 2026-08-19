@@ -12,6 +12,11 @@
       .home-view { min-height: 100vh; }
       .poster-fallback { position:absolute; inset:0; display:grid; place-items:center; padding:24px; color:#eee; font-weight:800; text-align:center; }
       .browse-view { padding-top:112px; }
+      .catalog-status { min-height:24px; margin:14px 0 4px; color:#aaa; font-size:.92rem; }
+      .catalog-status.is-loading::before { content:""; display:inline-block; width:10px; height:10px; margin-right:8px; border:2px solid #666; border-top-color:#fff; border-radius:50%; animation:catalog-spin .8s linear infinite; }
+      .load-more-wrap { display:flex; justify-content:center; padding:28px 0 110px; }
+      #load-more { min-width:150px; }
+      @keyframes catalog-spin { to { transform:rotate(360deg); } }
     </style>
   </head>
   <body>
@@ -58,10 +63,12 @@
             <button type="button" id="clear-search" aria-label="Clear search" hidden>×</button>
           </label>
         </div>
+        <p class="catalog-status" id="catalog-status" aria-live="polite"></p>
         <div class="catalog-grid" id="catalog-grid"></div>
         <div class="empty-state" id="empty-state" hidden>
           <span>NO RESULTS</span><h1 id="empty-title">Nothing found.</h1><p id="empty-copy">Try another title or genre.</p>
         </div>
+        <div class="load-more-wrap"><button class="secondary-button" type="button" id="load-more" hidden>Load more</button></div>
       </section>
 
       <nav class="mobile-nav" aria-label="Mobile navigation">

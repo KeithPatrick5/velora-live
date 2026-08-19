@@ -1,4 +1,5 @@
 const image = (path) => `https://image.tmdb.org/t/p/w500${path}`;
+const CATALOG_SIZE = 100000;
 
 const catalog = [
   [693134,"Dune: Part Two","movie",2024,"PG-13","2h 46m",98,["Sci-Fi","Adventure","Drama"],"/1pdfLvkbY9ohJlCjQH2CZjjYVvJ.jpg"],
@@ -43,8 +44,6 @@ const rows = [
   ["Movie Night", movies.slice(7)]
 ];
 
-let activeTab = "home";
-let myList = JSON.parse(localStorage.getItem("noctra-my-list") || "[]");
 const homeView = document.querySelector(".home-view");
 const browseView = document.querySelector(".browse-view");
 const grid = document.querySelector("#catalog-grid");
@@ -53,8 +52,51 @@ const clearSearch = document.querySelector("#clear-search");
 const modal = document.querySelector("#player-modal");
 const frame = document.querySelector("#player-frame");
 const playerTitle = document.querySelector("#player-title");
+const status = document.querySelector("#catalog-status");
+const loadMore = document.querySelector("#load-more");
+
+let activeTab = "home";
+let browseItems = [];
+let browsePage = 1;
+let requestSerial = 0;
+let searchTimer;
+
+function safeJson(value, fallback) {
+  try { return JSON.parse(value); } catch { return fallback; }
+}
+
+function normalizeItem(item) {
+  const id = Number(item?.id);
+  const type = item?.type === "tv" ? "tv" : "movie";
+  if (!Number.isInteger(id) || id < 1 || !item?.title) return null;
+  return {
+    id,
+    type,
+    title: String(item.title).slice(0, 180),
+    year: String(item.year || "").slice(0, 4),
+    maturity: String(item.maturity || ""),
+    runtime: String(item.runtime || ""),
+    match: Number(item.match) || 0,
+    genres: Array.isArray(item.genres) ? item.genres.map(String).slice(0, 6) : [],
+    poster: /^https:\/\/(image|media)\.tmdb\.org\//.test(item.poster || "") ? item.poster : "",
+    overview: String(item.overview || "").slice(0, 600)
+  };
+}
+
+function itemKey(item) { return `${item.type}:${item.id}`; }
+
+const storedItems = safeJson(localStorage.getItem("noctra-saved-items") || "[]", []);
+let savedItems = Array.isArray(storedItems) ? storedItems.map(normalizeItem).filter(Boolean) : [];
+if (!savedItems.length) {
+  const legacyIds = safeJson(localStorage.getItem("noctra-my-list") || "[]", []);
+  if (Array.isArray(legacyIds)) savedItems = catalog.filter((item) => legacyIds.includes(item.id));
+}
 
 document.querySelector("#hero").style.backgroundImage = "url(https://image.tmdb.org/t/p/original/xOMo8BRK7PfcJv9JCnx7s5hj0PX.jpg)";
+
+function escapeHtml(value) {
+  return String(value).replace(/[&<>'"]/g, (character) => ({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"})[character]);
+}
 
 function playerUrl(item) {
   return item.type === "movie"
@@ -75,20 +117,39 @@ function closePlayer() {
   document.body.style.overflow = "";
 }
 
+function isSaved(item) {
+  const key = itemKey(item);
+  return savedItems.some((saved) => itemKey(saved) === key);
+}
+
+function persistSavedItems() {
+  localStorage.setItem("noctra-saved-items", JSON.stringify(savedItems));
+}
+
 function toggleList(item) {
-  myList = myList.includes(item.id) ? myList.filter((id) => id !== item.id) : [...myList,item.id];
-  localStorage.setItem("noctra-my-list", JSON.stringify(myList));
+  const key = itemKey(item);
+  savedItems = isSaved(item)
+    ? savedItems.filter((saved) => itemKey(saved) !== key)
+    : [...savedItems, normalizeItem(item)];
+  persistSavedItems();
   updateHeroList();
-  if (!browseView.hidden) renderGrid();
+  if (activeTab === "list") {
+    browseItems = savedItems;
+    renderGrid();
+  }
   renderRows();
 }
 
 function card(item) {
+  const added = isSaved(item);
   const article = document.createElement("article");
+  const safeTitle = escapeHtml(item.title);
+  const safePoster = escapeHtml(item.poster || "");
   article.className = "media-card";
-  article.innerHTML = `<button type="button" class="poster-button" aria-label="Play ${item.title}"><span class="poster-fallback">${item.title}</span><img src="${item.poster}" alt="${item.title} poster" loading="lazy"><span class="poster-shade"></span><span class="card-play"><span class="play-triangle"></span></span><span class="card-copy"><strong>${item.title}</strong><small>${item.type === "tv" ? "Series" : item.year}</small></span></button><button type="button" class="list-toggle ${myList.includes(item.id) ? "is-added" : ""}" aria-label="${myList.includes(item.id) ? "Remove" : "Add"} ${item.title} ${myList.includes(item.id) ? "from" : "to"} My List">${myList.includes(item.id) ? "✓" : "+"}</button>`;
+  article.innerHTML = `<button type="button" class="poster-button" aria-label="Play ${safeTitle}"><span class="poster-fallback">${safeTitle}</span>${safePoster ? `<img src="${safePoster}" alt="${safeTitle} poster" loading="lazy">` : ""}<span class="poster-shade"></span><span class="card-play"><span class="play-triangle"></span></span><span class="card-copy"><strong>${safeTitle}</strong><small>${item.type === "tv" ? "Series" : escapeHtml(item.year || "Movie")}</small></span></button><button type="button" class="list-toggle ${added ? "is-added" : ""}" aria-label="${added ? "Remove" : "Add"} ${safeTitle} ${added ? "from" : "to"} My List">${added ? "✓" : "+"}</button>`;
   article.querySelector(".poster-button").addEventListener("click", () => play(item));
   article.querySelector(".list-toggle").addEventListener("click", () => toggleList(item));
+  article.querySelector("img")?.addEventListener("error", (event) => event.currentTarget.remove());
   return article;
 }
 
@@ -105,33 +166,124 @@ function renderRows() {
   });
 }
 
-function visibleCatalog() {
-  if (activeTab === "movies") return movies;
-  if (activeTab === "tv") return shows;
-  if (activeTab === "list") return catalog.filter((item) => myList.includes(item.id));
-  return catalog;
+function setStatus(message, loading = false) {
+  status.textContent = message;
+  status.classList.toggle("is-loading", loading);
+}
+
+function showEmpty(title, copy) {
+  const empty = document.querySelector("#empty-state");
+  document.querySelector("#empty-title").textContent = title;
+  document.querySelector("#empty-copy").textContent = copy;
+  empty.hidden = false;
+  grid.hidden = true;
 }
 
 function renderGrid() {
-  const term = search.value.trim().toLowerCase();
-  const results = visibleCatalog().filter((item) => `${item.title} ${item.year} ${item.genres.join(" ")}`.toLowerCase().includes(term));
+  const term = activeTab === "list" ? search.value.trim().toLowerCase() : "";
+  const results = term
+    ? browseItems.filter((item) => `${item.title} ${item.year}`.toLowerCase().includes(term))
+    : browseItems;
   grid.replaceChildren(...results.map(card));
   grid.hidden = results.length === 0;
-  const empty = document.querySelector("#empty-state");
-  empty.hidden = results.length !== 0;
+  document.querySelector("#empty-state").hidden = results.length !== 0;
   if (!results.length) {
-    const isEmptyList = activeTab === "list" && !term;
-    document.querySelector("#empty-title").textContent = isEmptyList ? "Your list is empty." : `Nothing found for “${search.value}”.`;
-    document.querySelector("#empty-copy").textContent = isEmptyList ? "Tap + on any title to save it here." : "Try another title or genre.";
+    if (activeTab === "list" && !savedItems.length) showEmpty("Your list is empty.", "Tap + on any title to save it here.");
+    else if (activeTab === "list") showEmpty(`Nothing found for “${search.value}”.`, "Try another title.");
   }
   clearSearch.hidden = !search.value;
 }
 
+async function getCatalog(params) {
+  const response = await fetch(`/api/catalog?${new URLSearchParams(params)}`, {headers:{accept:"application/json"}});
+  if (!response.ok) throw new Error(`Catalog request failed (${response.status})`);
+  return response.json();
+}
+
+async function loadBrowse(type, append = false) {
+  const serial = ++requestSerial;
+  const nextPage = append ? browsePage + 1 : 1;
+  loadMore.hidden = true;
+  if (!append) {
+    browseItems = [];
+    grid.replaceChildren();
+    grid.hidden = true;
+  }
+  setStatus(append ? "Loading more titles…" : "Loading the catalog…", true);
+  try {
+    const data = await getCatalog({type, page:String(nextPage)});
+    if (serial !== requestSerial || activeTab !== type) return;
+    const incoming = (data.results || []).map(normalizeItem).filter(Boolean);
+    const merged = append ? [...browseItems, ...incoming] : incoming;
+    browseItems = [...new Map(merged.map((item) => [itemKey(item), item])).values()];
+    browsePage = nextPage;
+    renderGrid();
+    setStatus(`${browseItems.length} ${type === "tv" ? "series" : "movies"} loaded • page ${browsePage} of 500`);
+    loadMore.hidden = incoming.length < 20;
+  } catch (error) {
+    if (serial !== requestSerial) return;
+    setStatus("");
+    showEmpty("Catalog temporarily unavailable.", "Please try again in a moment.");
+    console.error("[catalog:browse]", error);
+  }
+}
+
+async function runSearch(term) {
+  const query = term.trim();
+  if (query.length < 2) {
+    browseItems = [];
+    setStatus(`Search ${CATALOG_SIZE.toLocaleString()} movies and series`);
+    showEmpty("Search the full catalog.", "Type at least two letters to find a title.");
+    return;
+  }
+  const serial = ++requestSerial;
+  grid.replaceChildren();
+  grid.hidden = true;
+  loadMore.hidden = true;
+  document.querySelector("#empty-state").hidden = true;
+  setStatus(`Searching for “${query}”…`, true);
+  try {
+    const data = await getCatalog({mode:"search", q:query});
+    if (serial !== requestSerial || search.value.trim() !== query) return;
+    let results = (data.results || []).map(normalizeItem).filter(Boolean);
+    if (activeTab === "movies") results = results.filter((item) => item.type === "movie");
+    if (activeTab === "tv") results = results.filter((item) => item.type === "tv");
+    browseItems = results;
+    renderGrid();
+    setStatus(`${results.length} result${results.length === 1 ? "" : "s"} for “${query}” • ${Number(data.catalogSize || CATALOG_SIZE).toLocaleString()} titles indexed`);
+    if (!results.length) showEmpty(`Nothing found for “${query}”.`, "Check the spelling or try another title.");
+    enrichSearch(query, serial);
+  } catch (error) {
+    if (serial !== requestSerial) return;
+    setStatus("");
+    showEmpty("Search temporarily unavailable.", "Please try again in a moment.");
+    console.error("[catalog:search]", error);
+  }
+}
+
+async function enrichSearch(query, serial) {
+  try {
+    const data = await getCatalog({mode:"enrich", q:query});
+    if (serial !== requestSerial || search.value.trim() !== query) return;
+    let richResults = (data.results || []).map(normalizeItem).filter(Boolean);
+    if (activeTab === "movies") richResults = richResults.filter((item) => item.type === "movie");
+    if (activeTab === "tv") richResults = richResults.filter((item) => item.type === "tv");
+    if (!richResults.length) return;
+    const richKeys = new Set(richResults.map(itemKey));
+    browseItems = [...richResults, ...browseItems.filter((item) => !richKeys.has(itemKey(item)))].slice(0, 80);
+    renderGrid();
+  } catch (error) {
+    console.warn("[catalog:enrich]", error);
+  }
+}
+
 function updateHeroList() {
-  document.querySelector("#hero-list").textContent = myList.includes(featured.id) ? "✓ In My List" : "+ My List";
+  document.querySelector("#hero-list").textContent = isSaved(featured) ? "✓ In My List" : "+ My List";
 }
 
 function setTab(tab) {
+  clearTimeout(searchTimer);
+  requestSerial += 1;
   activeTab = tab;
   document.querySelectorAll("[data-tab]").forEach((button) => button.classList.toggle("active", button.dataset.tab === tab));
   if (tab === "home") {
@@ -141,25 +293,60 @@ function setTab(tab) {
     homeView.hidden = true;
     browseView.hidden = false;
     search.value = "";
+    clearSearch.hidden = true;
+    loadMore.hidden = true;
     document.querySelector("#browse-title").textContent = tab === "tv" ? "Series" : tab === "list" ? "My List" : "Movies";
-    renderGrid();
-    setTimeout(() => search.focus(), 0);
+    if (tab === "list") {
+      browseItems = savedItems;
+      setStatus(`${savedItems.length} saved title${savedItems.length === 1 ? "" : "s"}`);
+      renderGrid();
+    } else {
+      loadBrowse(tab);
+    }
   }
   scrollTo({top:0,behavior:"smooth"});
 }
 
-document.querySelectorAll("[data-tab]").forEach((button) => button.addEventListener("click", () => setTab(button.dataset.tab)));
-document.querySelector(".search-button").addEventListener("click", () => {
-  activeTab = "home";
+function openSearch() {
+  clearTimeout(searchTimer);
+  requestSerial += 1;
+  activeTab = "search";
+  document.querySelectorAll("[data-tab]").forEach((button) => button.classList.remove("active"));
   homeView.hidden = true;
   browseView.hidden = false;
   document.querySelector("#browse-title").textContent = "Search";
   search.value = "";
-  renderGrid();
+  clearSearch.hidden = true;
+  loadMore.hidden = true;
+  browseItems = [];
+  setStatus(`Search ${CATALOG_SIZE.toLocaleString()} movies and series`);
+  showEmpty("Search the full catalog.", "Type at least two letters to find a title.");
   setTimeout(() => search.focus(),0);
+}
+
+document.querySelectorAll("[data-tab]").forEach((button) => button.addEventListener("click", () => setTab(button.dataset.tab)));
+document.querySelector(".search-button").addEventListener("click", openSearch);
+search.addEventListener("input", () => {
+  clearSearch.hidden = !search.value;
+  if (activeTab === "list") {
+    browseItems = savedItems;
+    renderGrid();
+    return;
+  }
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(() => runSearch(search.value), 320);
 });
-search.addEventListener("input", renderGrid);
-clearSearch.addEventListener("click", () => { search.value = ""; search.focus(); renderGrid(); });
+clearSearch.addEventListener("click", () => {
+  search.value = "";
+  search.focus();
+  clearSearch.hidden = true;
+  if (activeTab === "movies" || activeTab === "tv") loadBrowse(activeTab);
+  else if (activeTab === "list") { browseItems = savedItems; renderGrid(); }
+  else runSearch("");
+});
+loadMore.addEventListener("click", () => {
+  if (activeTab === "movies" || activeTab === "tv") loadBrowse(activeTab, true);
+});
 document.querySelector("#hero-play").addEventListener("click", () => play(featured));
 document.querySelector("#hero-list").addEventListener("click", () => toggleList(featured));
 document.querySelector("#close-player").addEventListener("click", closePlayer);

@@ -1,7 +1,10 @@
 {
-  "alias": ["watchnoctra.vercel.app"],
+  "alias": ["noctra-tv.vercel.app"],
   "cleanUrls": true,
   "trailingSlash": false,
+  "functions": {
+    "api/catalog.js": { "maxDuration": 10 }
+  },
   "headers": [
     {
       "source": "/(.*)",
