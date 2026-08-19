@@ -220,9 +220,12 @@ export async function requestHandler(req,res) {
   }
 }
 
-// Vercel imports requestHandler through api/index.js. Only open a TCP listener
-// when this file is run directly for local development.
-if (!process.env.VERCEL) {
+// Only open a TCP listener when `node server.js` runs this file directly.
+// Importing it from Vercel must never depend on a platform environment flag.
+const invokedDirectly = process.argv[1]
+  ? path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)
+  : false;
+if (invokedDirectly) {
   const server = http.createServer(requestHandler);
   server.listen(PORT, () => console.log(`Velora running at http://localhost:${PORT}`));
 }

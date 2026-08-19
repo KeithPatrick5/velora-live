@@ -9,7 +9,7 @@ The existing Velora frontend is preserved, with a Node backend for catalog, play
 - Live TMDB catalog support using TMDB IDs.
 - Snapshot fallback so the recovered site boots without a TMDB token.
 - Playback provider abstraction.
-- Videasy configured as provider #1 using TMDB IDs.
+- VidCore configured as the primary player with Videasy as a second source.
 - Movies and TV episode playback supported.
 - Local account, library, and playback-progress API implemented.
 
@@ -30,7 +30,7 @@ Without `TMDB_API_TOKEN`, the app uses the catalog snapshots. Snapshot titles st
 
 ## Vercel
 
-The included `vercel.json` keeps the intro, app, static assets, and every `/api/*` route connected to the Node backend. Add `TMDB_API_TOKEN` (or `TMDB_API_KEY`) to the Vercel project before deploying so snapshot titles can resolve to playable TMDB IDs.
+The included `vercel.json` keeps the intro, app, static assets, and every `/api/*` route connected to the Node backend. The API uses Vercel's Web-standard Node entrypoint, and `/api/health` provides a deployment smoke check. Add `TMDB_API_TOKEN` (or `TMDB_API_KEY`) to the Vercel project before deploying so snapshot titles can resolve to playable TMDB IDs.
 
 ## Architecture
 
@@ -40,11 +40,12 @@ Velora UI
      -> TMDB live catalog
   -> /api/resolve
      -> playback resolver
-        -> Videasy provider
+        -> VidCore primary
+        -> Videasy fallback
            -> TMDB movie / TV IDs
 ```
 
-The video bytes are not proxied through this server. Videasy playback is embedded directly in the existing fullscreen player shell.
+The video bytes are not proxied through this server. VidCore and Videasy playback are embedded directly in the existing fullscreen player shell.
 
 ## Dynamic Live TV
 Live TV now loads dynamically from the public iptv-org country playlist instead of shipping hardcoded channel cards.
