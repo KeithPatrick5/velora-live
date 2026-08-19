@@ -37,9 +37,19 @@ export async function getSection(section) {
 
 export async function search(query) {
   return liveOrFallback("search", () => searchCatalog(query), async () => {
-    const home = await readSnapshot("catalog.json");
+    const snapshots = await Promise.all([
+      readSnapshot("catalog.json"),
+      readSnapshot("catalog-movies.json"),
+      readSnapshot("catalog-shows.json"),
+      readSnapshot("catalog-anime.json")
+    ]);
     const q = String(query || "").toLowerCase();
-    return { items: (home.items || []).filter(x => x.title?.toLowerCase().includes(q)).slice(0, 30), source: "snapshot-fallback" };
+    const seen = new Set();
+    const items = snapshots.flatMap(snapshot => snapshot.items || [])
+      .filter(item => item?.id && !seen.has(item.id) && seen.add(item.id))
+      .filter(item => item.title?.toLowerCase().includes(q) || item.summary?.toLowerCase().includes(q))
+      .slice(0, 40);
+    return { items, source: "snapshot-fallback" };
   });
 }
 
@@ -52,7 +62,12 @@ export async function details(id, season) {
     }
   }
 
-  const home = await readSnapshot("catalog.json");
-  const item = (home.items || []).find(x => x.id === id);
+  const snapshots = await Promise.all([
+    readSnapshot("catalog.json"),
+    readSnapshot("catalog-movies.json"),
+    readSnapshot("catalog-shows.json"),
+    readSnapshot("catalog-anime.json")
+  ]);
+  const item = snapshots.flatMap(snapshot => snapshot.items || []).find(x => x.id === id);
   return item ? { item, seasons: [], episodes: [] } : null;
 }

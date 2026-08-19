@@ -1,8 +1,7 @@
 .env
-.DS_Store
+.env.*
+!.env.example
 node_modules/
 data/state.json
 data/live-health.json
-.vercel
-.env.local
-.env*
+.vercel/

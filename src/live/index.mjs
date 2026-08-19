@@ -396,9 +396,10 @@ export async function getLiveChannels(options={}) {
     try {
       dynamic = await fetchPlaylist(playlistUrl);
       cache = { key, at: Date.now(), channels: dynamic };
-    } catch (error) {
-      if (cache.channels.length) dynamic = cache.channels;
-      else throw error;
+    } catch {
+      // Keep the Live page usable with the bundled curated channels when a
+      // remote playlist is temporarily unavailable.
+      dynamic = cache.channels;
     }
   }
 
