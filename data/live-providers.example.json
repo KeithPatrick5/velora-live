@@ -1,7 +1,0 @@
-[
-  {
-    "name": "My additional provider",
-    "url": "https://example.com/channels.m3u",
-    "enabled": true
-  }
-]
