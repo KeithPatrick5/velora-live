@@ -1,0 +1,86 @@
+/* v18: first-load Firefly intro + clean catalog handoff. Player/stream loaders are untouched. */
+#veloraSiteIntroV18 {
+  --catalog-progress: 8%;
+  position: fixed;
+  inset: 0;
+  z-index: 2147483647;
+  background: #000;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 1;
+  transition: opacity .32s cubic-bezier(.2,.8,.2,1);
+}
+#veloraSiteIntroV18.out { opacity: 0; }
+#veloraSiteIntroVideoV18 {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  background: #000;
+}
+#veloraSiteIntroV18 .veloraIntroProgress {
+  position: absolute;
+  left: 50%;
+  bottom: max(38px, 5vh);
+  width: min(280px, 48vw);
+  height: 2px;
+  transform: translateX(-50%);
+  border-radius: 999px;
+  background: rgba(255,255,255,.12);
+  overflow: hidden;
+  opacity: .8;
+  transition: opacity .25s ease;
+}
+#veloraSiteIntroV18 .veloraIntroProgress::after {
+  content: '';
+  display: block;
+  width: var(--catalog-progress);
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg,#7e0d20,#ef1d43,#ff687d);
+  box-shadow: 0 0 14px rgba(239,29,67,.55);
+  transition: width .28s cubic-bezier(.2,.8,.2,1);
+}
+#veloraSiteIntroV18.holding .veloraIntroProgress { opacity: 1; }
+
+/* Never expose the recovered app's crude initial "Loading the live catalog..." state. */
+.catalogState.veloraCatalogBootState {
+  color: transparent !important;
+}
+.catalogState.veloraCatalogBootState > * {
+  visibility: hidden !important;
+}
+.catalogState.veloraCatalogBootState::before {
+  content: 'V' !important;
+  position: absolute !important;
+  left: 50% !important;
+  top: calc(50% - 22px) !important;
+  transform: translate(-50%,-50%) !important;
+  color: #b31532 !important;
+  font: 700 44px/1 Geist,system-ui,sans-serif !important;
+  letter-spacing: -.08em !important;
+  opacity: .82 !important;
+}
+.catalogState.veloraCatalogBootState::after {
+  content: '' !important;
+  position: absolute !important;
+  left: 50% !important;
+  top: calc(50% + 30px) !important;
+  width: 150px !important;
+  height: 2px !important;
+  transform: translateX(-50%) !important;
+  border-radius: 999px !important;
+  background: linear-gradient(90deg,transparent,#c71837,transparent) !important;
+  animation: veloraCatalogPulse 1.15s ease-in-out infinite !important;
+}
+@keyframes veloraCatalogPulse {
+  0%,100% { opacity:.2; transform:translateX(-50%) scaleX(.45); }
+  50% { opacity:.95; transform:translateX(-50%) scaleX(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  #veloraSiteIntroVideoV18 { display:none; }
+  #veloraSiteIntroV18 .veloraIntroProgress::after { transition:none; }
+  .catalogState.veloraCatalogBootState::after { animation:none !important; }
+}

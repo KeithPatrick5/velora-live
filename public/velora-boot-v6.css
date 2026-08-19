@@ -1,0 +1,30 @@
+#veloraBootOverlay{position:fixed;inset:0;z-index:2147483647;background:#000;overflow:hidden;pointer-events:all;opacity:1;transition:opacity .62s ease}
+#veloraBootOverlay.exit{opacity:0}
+.v6Stage{position:absolute;inset:0;background:#000;overflow:hidden}
+.v6V{position:absolute;left:50%;top:48%;width:164px;height:260px;transform:translate(-50%,-50%) scale(.72);filter:drop-shadow(0 0 22px rgba(255,0,35,.34));opacity:0;transform-origin:center}
+.v6V i{position:absolute;top:0;height:100%;width:40px;border-radius:3px;box-shadow:0 0 20px rgba(255,10,45,.28)}
+.v6Left{left:35px;background:linear-gradient(90deg,#6e0011,#f30a2d 55%,#ff3855);transform:rotate(-18deg) translateX(-90px)}
+.v6Right{right:35px;background:linear-gradient(90deg,#ff3855,#f30a2d 45%,#6e0011);transform:rotate(18deg) translateX(90px)}
+.v6Core{left:76px;width:12px!important;height:228px!important;top:16px!important;background:#ff0b2f;transform:scaleY(0);transform-origin:bottom;box-shadow:0 0 28px rgba(255,18,55,.85)!important}
+.v6Word{position:absolute;left:50%;top:calc(48% + 180px);transform:translateX(-50%);font:800 14px/1 Arial,sans-serif;letter-spacing:1.25em;color:#f4f4f4;opacity:0;white-space:nowrap}
+.v6Tunnel{position:absolute;left:50%;top:50%;width:100vw;height:100vh;transform:translate(-50%,-50%) scaleX(.006);opacity:0;transform-origin:center;filter:saturate(1.35)}
+.v6Tunnel i{--a:calc((var(--i) - 24) * 1.7deg);position:absolute;left:50%;top:50%;width:7px;height:170vh;transform-origin:50% 50%;transform:translate(-50%,-50%) rotate(var(--a)) scaleY(.1);background:linear-gradient(180deg,transparent 0%,hsl(calc(var(--i)*9deg) 100% 52%) 28%,#fff 50%,hsl(calc(var(--i)*9deg + 70deg) 100% 52%) 72%,transparent 100%);mix-blend-mode:screen;filter:blur(.45px)}
+.v6Flash{position:absolute;inset:0;background:#fff;opacity:0;mix-blend-mode:screen;pointer-events:none}
+#veloraBootOverlay.run .v6V{animation:v6Appear .7s .15s cubic-bezier(.16,.86,.2,1) forwards,v6Punch 2.05s 1.48s cubic-bezier(.14,.72,.12,1) forwards}
+#veloraBootOverlay.run .v6Left{animation:v6LeftIn .58s .18s cubic-bezier(.16,.86,.2,1) forwards}
+#veloraBootOverlay.run .v6Right{animation:v6RightIn .58s .18s cubic-bezier(.16,.86,.2,1) forwards}
+#veloraBootOverlay.run .v6Core{animation:v6CoreIn .42s .58s ease-out forwards}
+#veloraBootOverlay.run .v6Word{animation:v6Word 1.8s .55s ease forwards}
+#veloraBootOverlay.run .v6Tunnel{animation:v6TunnelOpen 1.75s 1.58s cubic-bezier(.12,.72,.18,1) forwards}
+#veloraBootOverlay.run .v6Tunnel i{animation:v6Ray 1.7s calc(1.55s + var(--i)*7ms) ease-out forwards}
+#veloraBootOverlay.run .v6Flash{animation:v6Flash 1.25s 2.28s ease-out forwards}
+@keyframes v6Appear{0%{opacity:0;transform:translate(-50%,-50%) scale(.62)}100%{opacity:1;transform:translate(-50%,-50%) scale(1)}}
+@keyframes v6LeftIn{0%{transform:rotate(-18deg) translateX(-120px);opacity:0}100%{transform:rotate(-18deg) translateX(0);opacity:1}}
+@keyframes v6RightIn{0%{transform:rotate(18deg) translateX(120px);opacity:0}100%{transform:rotate(18deg) translateX(0);opacity:1}}
+@keyframes v6CoreIn{0%{transform:scaleY(0);opacity:0}100%{transform:scaleY(1);opacity:1}}
+@keyframes v6Word{0%{opacity:0;letter-spacing:1.45em}28%,70%{opacity:1;letter-spacing:.78em}100%{opacity:0;letter-spacing:1.05em}}
+@keyframes v6Punch{0%{transform:translate(-50%,-50%) scale(1);opacity:1}35%{transform:translate(-50%,-50%) scale(1.22);opacity:1}100%{transform:translate(-50%,-50%) scale(34);opacity:0}}
+@keyframes v6TunnelOpen{0%{opacity:0;transform:translate(-50%,-50%) scaleX(.006)}16%{opacity:1}62%{opacity:1;transform:translate(-50%,-50%) scaleX(.42)}100%{opacity:0;transform:translate(-50%,-50%) scaleX(2.5)}}
+@keyframes v6Ray{0%{opacity:0;transform:translate(-50%,-50%) rotate(var(--a)) scaleY(.08)}18%{opacity:.9}70%{opacity:.95;transform:translate(-50%,-50%) rotate(var(--a)) scaleY(1.2)}100%{opacity:0;transform:translate(-50%,-50%) rotate(var(--a)) scaleY(1.9)}}
+@keyframes v6Flash{0%,42%{opacity:0}58%{opacity:.48}100%{opacity:0}}
+@media(max-width:700px){.v6V{width:118px;height:188px}.v6V i{width:29px}.v6Left{left:25px}.v6Right{right:25px}.v6Core{left:54px!important;width:10px!important;height:164px!important;top:12px!important}.v6Word{top:calc(48% + 134px);font-size:11px}}

@@ -1,0 +1,24 @@
+/* v17 first-visit site intro only. Never blocks the app if JS/video fails. */
+#veloraSiteIntroV17 {
+  position:fixed;
+  inset:0;
+  z-index:2147483647;
+  background:#000;
+  overflow:hidden;
+  pointer-events:none;
+  opacity:1;
+  transition:opacity .32s cubic-bezier(.2,.8,.2,1);
+}
+#veloraSiteIntroV17.out { opacity:0; }
+#veloraSiteIntroVideoV17 {
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+  background:#000;
+}
+@media (prefers-reduced-motion: reduce) {
+  #veloraSiteIntroV17 { display:none!important; }
+}

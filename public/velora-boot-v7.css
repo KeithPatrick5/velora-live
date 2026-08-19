@@ -1,0 +1,35 @@
+html.veloraBooting,html.veloraBooting body{background:#000!important;overflow:hidden!important}
+html.veloraBooting .catalogState{visibility:hidden!important}
+#veloraBootOverlay{position:fixed;inset:0;z-index:2147483647;background:#000;overflow:hidden;pointer-events:all;opacity:1;transition:opacity .72s ease}
+#veloraBootOverlay.exit{opacity:0}
+.v7Stage{position:absolute;inset:0;background:#000;overflow:hidden;perspective:900px}
+.v7V{position:absolute;left:50%;top:50%;width:170px;height:270px;transform:translate(-50%,-50%) scale(.76);opacity:0;filter:drop-shadow(0 0 26px rgba(255,0,45,.5));z-index:4}
+.v7V i{position:absolute;top:0;height:100%;width:42px;border-radius:2px;transform-origin:center}
+.v7Left{left:36px;background:linear-gradient(90deg,#68000e,#e4002b 50%,#ff4060);transform:rotate(-18deg) translateX(-120px)}
+.v7Right{right:36px;background:linear-gradient(90deg,#ff4060,#e4002b 50%,#68000e);transform:rotate(18deg) translateX(120px)}
+.v7Core{left:79px!important;width:12px!important;height:232px!important;top:18px!important;background:#ff1239;transform:scaleY(0);transform-origin:bottom;box-shadow:0 0 35px rgba(255,20,60,.95)}
+.v7Word{position:absolute;left:50%;top:calc(50% + 180px);transform:translateX(-50%);z-index:5;color:#f6f6f6;font:800 14px/1 Arial,sans-serif;letter-spacing:1.1em;white-space:nowrap;opacity:0}
+.v7Slit{position:absolute;left:50%;top:0;width:2px;height:100%;transform:translateX(-50%) scaleY(0);background:#fff;box-shadow:0 0 15px #fff,0 0 55px #ff1748,0 0 120px #ff1748;z-index:3;opacity:0}
+.v7Rays{position:absolute;inset:-25%;z-index:2;opacity:0;transform:scale(.04);transform-origin:center}
+.v7Rays i{--n:calc(var(--i) - 36);position:absolute;left:50%;top:50%;width:10px;height:180vh;transform-origin:50% 50%;transform:translate(-50%,-50%) rotate(calc(var(--n)*2.5deg)) scaleY(.08);background:linear-gradient(180deg,transparent 0%,hsl(calc(var(--i)*7deg) 100% 52%) 30%,#fff 49%,hsl(calc(var(--i)*7deg + 80deg) 100% 55%) 68%,transparent 100%);mix-blend-mode:screen;filter:blur(.35px)}
+.v7Flash{position:absolute;inset:0;background:#fff;opacity:0;z-index:8;mix-blend-mode:screen}
+#veloraBootOverlay.run .v7V{animation:v7VShow .72s .18s cubic-bezier(.15,.9,.2,1) forwards,v7VZoom 1.9s 1.72s cubic-bezier(.12,.68,.08,1) forwards}
+#veloraBootOverlay.run .v7Left{animation:v7LeftIn .55s .2s cubic-bezier(.16,.86,.2,1) forwards}
+#veloraBootOverlay.run .v7Right{animation:v7RightIn .55s .2s cubic-bezier(.16,.86,.2,1) forwards}
+#veloraBootOverlay.run .v7Core{animation:v7CoreIn .42s .62s ease-out forwards}
+#veloraBootOverlay.run .v7Word{animation:v7WordIn 1.7s .65s ease forwards}
+#veloraBootOverlay.run .v7Slit{animation:v7Slit 1.15s 1.62s ease-out forwards}
+#veloraBootOverlay.run .v7Rays{animation:v7RaysOpen 1.7s 2.04s cubic-bezier(.12,.76,.12,1) forwards}
+#veloraBootOverlay.run .v7Rays i{animation:v7Ray 1.65s calc(2.02s + var(--i)*4ms) ease-out forwards}
+#veloraBootOverlay.run .v7Flash{animation:v7Flash 1.1s 3.05s ease-out forwards}
+@keyframes v7VShow{0%{opacity:0;transform:translate(-50%,-50%) scale(.62)}100%{opacity:1;transform:translate(-50%,-50%) scale(1)}}
+@keyframes v7LeftIn{to{transform:rotate(-18deg) translateX(0)}}
+@keyframes v7RightIn{to{transform:rotate(18deg) translateX(0)}}
+@keyframes v7CoreIn{to{transform:scaleY(1)}}
+@keyframes v7WordIn{0%{opacity:0;letter-spacing:1.45em}30%,72%{opacity:1;letter-spacing:.76em}100%{opacity:0;letter-spacing:1em}}
+@keyframes v7VZoom{0%{transform:translate(-50%,-50%) scale(1);opacity:1}38%{transform:translate(-50%,-50%) scale(1.38);opacity:1}100%{transform:translate(-50%,-50%) scale(38);opacity:0}}
+@keyframes v7Slit{0%{opacity:0;transform:translateX(-50%) scaleY(0)}30%{opacity:1;transform:translateX(-50%) scaleY(.8)}72%{opacity:1;transform:translateX(-50%) scaleY(1)}100%{opacity:0;transform:translateX(-50%) scaleY(1)}}
+@keyframes v7RaysOpen{0%{opacity:0;transform:scale(.025)}18%{opacity:1}68%{opacity:1;transform:scale(.8)}100%{opacity:0;transform:scale(2.8)}}
+@keyframes v7Ray{0%{opacity:0;transform:translate(-50%,-50%) rotate(calc(var(--n)*2.5deg)) scaleY(.05)}18%{opacity:.95}70%{opacity:1;transform:translate(-50%,-50%) rotate(calc(var(--n)*2.5deg)) scaleY(1.3)}100%{opacity:0;transform:translate(-50%,-50%) rotate(calc(var(--n)*2.5deg)) scaleY(2)}}
+@keyframes v7Flash{0%,28%{opacity:0}52%{opacity:.58}100%{opacity:0}}
+@media(max-width:700px){.v7V{width:120px;height:190px}.v7V i{width:29px}.v7Left{left:25px}.v7Right{right:25px}.v7Core{left:55px!important;width:10px!important;height:164px!important;top:13px!important}.v7Word{top:calc(50% + 132px);font-size:11px}}

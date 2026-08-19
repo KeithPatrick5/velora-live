@@ -1,0 +1,138 @@
+[
+  {
+    "id": "scout-cbs-sports-hq",
+    "name": "CBS Sports HQ",
+    "category": "Sports",
+    "rawCategory": "Sports",
+    "country": "US",
+    "language": "English",
+    "description": "CBS Sports HQ",
+    "logo": "",
+    "tvgId": "CBSSportsHQ.us",
+    "provider": "Scout Verified",
+    "source": "stream-scout",
+    "player": {
+      "type": "stream",
+      "url": "https://dai.google.com/linear/hls/pa/event/9Lq0ERvoSR-z9AwvFS-xYA/stream/388c4ad2-441f-4737-965a-dddd932853b2:ATL/master.m3u8"
+    }
+  },
+  {
+    "id": "scout-cbs-sports-golazo",
+    "name": "CBS Sports Golazo Network",
+    "category": "Sports",
+    "rawCategory": "Sports",
+    "country": "US",
+    "language": "English",
+    "description": "CBS Sports Golazo Network",
+    "logo": "",
+    "tvgId": "CBSSportsGolazoNetwork.us",
+    "provider": "Scout Verified",
+    "source": "stream-scout",
+    "player": {
+      "type": "stream",
+      "url": "https://dai.google.com/linear/hls/pa/event/7f3Wv6f7QEKfQna22jHqLQ/stream/861289d9-9b39-4e06-a00d-65b41e78e840:DLS/master.m3u8"
+    }
+  },
+  {
+    "id": "scout-stadium",
+    "name": "Stadium",
+    "category": "Sports",
+    "rawCategory": "Sports",
+    "country": "US",
+    "language": "English",
+    "description": "Stadium",
+    "logo": "",
+    "tvgId": "Stadium.us",
+    "provider": "Scout Verified",
+    "source": "stream-scout",
+    "player": {
+      "type": "stream",
+      "url": "https://dai.google.com/linear/hls/pa/event/KTYK6mlHRy-d2aArw30DYQ/stream/c7bb9b9b-8ea5-40ea-9710-3ae57cb2a67a:CHS/master.m3u8"
+    }
+  },
+  {
+    "id": "scout-cbs-news",
+    "name": "CBS News 24/7",
+    "category": "News",
+    "rawCategory": "News",
+    "country": "US",
+    "language": "English",
+    "description": "CBS News 24/7",
+    "logo": "",
+    "tvgId": "CBSNews247.us",
+    "provider": "Scout Verified",
+    "source": "stream-scout",
+    "player": {
+      "type": "stream",
+      "url": "https://news20e7hhcb.airspace-cdn.cbsivideo.com/index.m3u8"
+    }
+  },
+  {
+    "id": "scout-scripps-news",
+    "name": "Scripps News",
+    "category": "News",
+    "rawCategory": "News",
+    "country": "US",
+    "language": "English",
+    "description": "Scripps News",
+    "logo": "",
+    "tvgId": "ScrippsNews.us",
+    "provider": "Scout Verified",
+    "source": "stream-scout",
+    "player": {
+      "type": "stream",
+      "url": "https://content.uplynk.com/channel/4bb4901b934c4e029fd4c1abfc766c37.m3u8"
+    }
+  },
+  {
+    "id": "scout-newsmax",
+    "name": "Newsmax",
+    "category": "News",
+    "rawCategory": "News",
+    "country": "US",
+    "language": "English",
+    "description": "Newsmax",
+    "logo": "",
+    "tvgId": "Newsmax.us",
+    "provider": "Scout Verified",
+    "source": "stream-scout",
+    "player": {
+      "type": "stream",
+      "url": "https://nmxlive.akamaized.net/hls/live/529965/Live_1/index.m3u8"
+    }
+  },
+  {
+    "id": "scout-dw-english",
+    "name": "DW English",
+    "category": "News",
+    "rawCategory": "News",
+    "country": "DE",
+    "language": "English",
+    "description": "DW English",
+    "logo": "",
+    "tvgId": "DWEnglish.de",
+    "provider": "Scout Verified",
+    "source": "stream-scout",
+    "player": {
+      "type": "stream",
+      "url": "https://dwamdstream102.akamaized.net/hls/live/2015525/dwstream102/master.m3u8"
+    }
+  },
+  {
+    "id": "scout-cgtn-english",
+    "name": "CGTN English",
+    "category": "News",
+    "rawCategory": "News",
+    "country": "CN",
+    "language": "English",
+    "description": "CGTN English",
+    "logo": "",
+    "tvgId": "CGTNEnglish.cn",
+    "provider": "Scout Verified",
+    "source": "stream-scout",
+    "player": {
+      "type": "stream",
+      "url": "https://english-livebkali.cgtn.com/live/encgtn.m3u8"
+    }
+  }
+]
