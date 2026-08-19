@@ -1,3 +1,4 @@
+// Explicit ESM extension keeps Vercel's CommonJS bootstrap isolated.
 import fs from "node:fs/promises";
 import path from "node:path";
 import crypto from "node:crypto";

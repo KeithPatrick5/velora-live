@@ -3,10 +3,10 @@ import fs from "node:fs/promises";
 import fsSync from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { getHome, getSection, search, details } from "./src/catalog/index.js";
-import { resolvePlayback } from "./src/playback/resolver.js";
-import { getLiveChannels, reportLiveHealth, getUpcomingSports, getStreamedSportsStreams } from "./src/live/index.js";
-import { signup, signin, logout, userBySession, updateUser, publicUser } from "./src/auth/store.js";
+import { getHome, getSection, search, details } from "./src/catalog/index.mjs";
+import { resolvePlayback } from "./src/playback/resolver.mjs";
+import { getLiveChannels, reportLiveHealth, getUpcomingSports, getStreamedSportsStreams } from "./src/live/index.mjs";
+import { signup, signin, logout, userBySession, updateUser, publicUser } from "./src/auth/store.mjs";
 
 const PORT = Number(process.env.PORT || 3000);
 const ROOT = path.dirname(fileURLToPath(import.meta.url));
@@ -220,7 +220,7 @@ export async function requestHandler(req,res) {
   }
 }
 
-// Only open a TCP listener when `node server.js` runs this file directly.
+// Only open a TCP listener when `node server.mjs` runs this file directly.
 // Importing it from Vercel must never depend on a platform environment flag.
 const invokedDirectly = process.argv[1]
   ? path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)

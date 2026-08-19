@@ -52,7 +52,7 @@ function nodeRequest(request, bytes, url) {
 async function invokeNodeHandler(request, url) {
   // Import inside the request boundary. If any backend module ever fails to
   // initialize, the outer catch returns a useful JSON response and log entry.
-  const { requestHandler } = await import("../server.js");
+  const { requestHandler } = await import("../server.mjs");
   const bytes = request.method === "GET" || request.method === "HEAD"
     ? Buffer.alloc(0)
     : Buffer.from(await request.arrayBuffer());

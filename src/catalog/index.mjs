@@ -1,7 +1,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { hasTmdb, homeCatalog, sectionCatalog, searchCatalog, titleDetails } from "./tmdb.js";
+import { hasTmdb, homeCatalog, sectionCatalog, searchCatalog, titleDetails } from "./tmdb.mjs";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const snapshots = path.resolve(here, "../../public/api-snapshot");

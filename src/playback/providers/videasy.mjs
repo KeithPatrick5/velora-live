@@ -1,3 +1,4 @@
+// Explicit ESM extension keeps Vercel's CommonJS bootstrap isolated.
 const DEFAULT_BASE = "https://player.videasy.net";
 
 function positiveInt(value) {

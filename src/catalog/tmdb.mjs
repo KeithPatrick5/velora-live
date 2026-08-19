@@ -1,3 +1,4 @@
+// Explicit ESM extension keeps Vercel's CommonJS bootstrap isolated.
 const TMDB = "https://api.themoviedb.org/3";
 const IMG = "https://image.tmdb.org/t/p";
 

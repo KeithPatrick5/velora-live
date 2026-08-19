@@ -1,3 +1,4 @@
+// Explicit ESM extension keeps Vercel's CommonJS bootstrap isolated.
 function positiveInt(value) {
   const n = Number(value);
   return Number.isInteger(n) && n > 0 ? n : null;

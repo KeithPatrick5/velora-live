@@ -1,12 +1,14 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
+  "redirects": [
+    { "source": "/", "destination": "/intro.html", "permanent": false }
+  ],
   "rewrites": [
-    { "source": "/", "destination": "/intro.html" },
     { "source": "/app", "destination": "/index.html" },
     { "source": "/api/:path*", "destination": "/api/index?__velora_path=:path*" }
   ],
   "functions": {
-    "api/index.js": {
+    "api/index.mjs": {
       "includeFiles": "{public/api-snapshot/**,data/**}"
     }
   }

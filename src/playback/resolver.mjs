@@ -1,6 +1,6 @@
-import { buildVidCoreSource } from './providers/vidcore.js';
-import { buildVideasySource } from './providers/videasy.js';
-import { findTmdbIdByTitle } from '../catalog/tmdb.js';
+import { buildVidCoreSource } from './providers/vidcore.mjs';
+import { buildVideasySource } from './providers/videasy.mjs';
+import { findTmdbIdByTitle } from '../catalog/tmdb.mjs';
 
 function tmdbIdFromVeloraId(id) {
   const match = String(id || '').match(/^tmdb-(?:movie|tv)-(\d+)$/);
